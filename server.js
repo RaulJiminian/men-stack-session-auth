@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import methodOverride from "method-override";
 import logger from "morgan";
+import session from "express-session";
 import router from "./controllers/auth.js";
 
 const app = express();
@@ -19,6 +20,14 @@ app.use(methodOverride("_method"));
 app.use(logger("dev"));
 // Set View Engine to ejs templating
 app.set("view engine", "ejs");
+// Configure session based Auth
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
 app.get("/", (req, res) => {
   res.render("index");

@@ -48,7 +48,12 @@ router.post("/sign-in", async (req, res) => {
   );
   console.log("Valid Password: ", validPassword);
 
-  
+  req.session.user = {
+    _id: userInDatabase._id,
+    username: userInDatabase.username,
+  };
+
+  res.redirect("/");
 });
 
 export default router;
