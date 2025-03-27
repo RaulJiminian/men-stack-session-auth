@@ -1,4 +1,5 @@
 import { Router } from "express";
+import isSignedIn from "../middleware/is-signed-in.js";
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
 
@@ -33,7 +34,14 @@ router.post("/sign-up", async (req, res) => {
     password: hashedPassword,
   });
 
-  res.send(`Thanks for signing up ${user.username}`);
+  req.session.user = {
+    _id: user._id,
+    username: user.username,
+  };
+
+  req.session.save(() => {
+    res.redirect("/");
+  });
 });
 
 router.post("/sign-in", async (req, res) => {
@@ -56,12 +64,19 @@ router.post("/sign-in", async (req, res) => {
     username: userInDatabase.username,
   };
 
-  res.redirect("/");
+  req.session.save(() => {
+    res.redirect("/");
+  });
 });
 
 router.get("/sign-out", (req, res) => {
-  req.session.destroy();
-  res.redirect("/");
+  req.session.destroy(() => {
+    res.redirect("/");
+  });
+});
+
+router.get("/vip", isSignedIn, (req, res) => {
+  res.render("auth/vip-lounge");
 });
 
 export default router;

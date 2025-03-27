@@ -1,10 +1,12 @@
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
+import MongoStore from "connect-mongo";
 import methodOverride from "method-override";
 import logger from "morgan";
 import session from "express-session";
 import router from "./controllers/auth.js";
+import passUserToView from "./middleware/pass-user-to-view.js";
 
 const app = express();
 
@@ -26,13 +28,16 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+    }),
   })
 );
+// Pass user to locals object middleware
+app.use(passUserToView);
 
 app.get("/", (req, res) => {
-  res.render("index", {
-    user: req.session.user
-  });
+  res.render("index");
 });
 
 app.use("/auth", router);
