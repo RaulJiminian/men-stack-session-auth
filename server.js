@@ -4,6 +4,7 @@ import db from "./db/connection.js";
 import MongoStore from "connect-mongo";
 import methodOverride from "method-override";
 import logger from "morgan";
+import chalk from "chalk";
 import session from "express-session";
 import router from "./routes/index.js";
 import passUserToView from "./middleware/pass-user-to-view.js";
@@ -38,7 +39,7 @@ app.use("/", router);
 
 db.on("connected", () => {
   console.clear();
-  console.log(chalk.blue(`Connected to MongoDB ${mongoose.connection.name}.`));
+  console.log(chalk.blue(`Connected to MongoDB ${db.name}.`));
   app.listen(PORT, () => {
     console.log(chalk.green(`The express app is ready on port ${PORT}!`));
   });
