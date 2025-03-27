@@ -30,7 +30,9 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render("index", {
+    user: req.session.user
+  });
 });
 
 app.use("/auth", router);

@@ -46,7 +46,10 @@ router.post("/sign-in", async (req, res) => {
     req.body.password,
     userInDatabase.password
   );
-  console.log("Valid Password: ", validPassword);
+
+  if (!validPassword) {
+    return res.send("Login failed. Please try again.");
+  }
 
   req.session.user = {
     _id: userInDatabase._id,
