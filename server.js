@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import methodOverride from "method-override";
 import logger from "morgan";
+import router from "./controllers/auth.js";
 
 const app = express();
 
@@ -22,6 +23,8 @@ app.set("view engine", "ejs");
 app.get("/", (req, res) => {
   res.render("index");
 });
+
+app.use("/auth", router);
 
 mongoose.connection.on("connected", () => {
   console.clear();
