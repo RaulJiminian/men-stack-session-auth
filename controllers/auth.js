@@ -1,20 +1,16 @@
-import { Router } from "express";
-import isSignedIn from "../middleware/is-signed-in.js";
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
 
-const router = Router();
-
 // list our routes
-router.get("/sign-up", (req, res) => {
+export const getSignUp = (req, res) => {
   res.render("auth/sign-up");
-});
+};
 
-router.get("/sign-in", (req, res) => {
+export const getSignIn = (req, res) => {
   res.render("auth/sign-in");
-});
+};
 
-router.post("/sign-up", async (req, res) => {
+export const registerUser = async (req, res) => {
   // Check if password and confirm password match
   if (req.body.password !== req.body.confirmPassword) {
     return res.send("Password and Confirm Password must match");
@@ -42,9 +38,9 @@ router.post("/sign-up", async (req, res) => {
   req.session.save(() => {
     res.redirect("/");
   });
-});
+};
 
-router.post("/sign-in", async (req, res) => {
+export const loginUser = async (req, res) => {
   const userInDatabase = await User.findOne({ username: req.body.username });
   if (!userInDatabase) {
     return res.send("Login failed. Please try again.");
@@ -67,16 +63,14 @@ router.post("/sign-in", async (req, res) => {
   req.session.save(() => {
     res.redirect("/");
   });
-});
+};
 
-router.get("/sign-out", (req, res) => {
+export const signOutUser = (req, res) => {
   req.session.destroy(() => {
     res.redirect("/");
   });
-});
+};
 
-router.get("/vip", isSignedIn, (req, res) => {
+export const enterVIP = (req, res) => {
   res.render("auth/vip-lounge");
-});
-
-export default router;
+};
