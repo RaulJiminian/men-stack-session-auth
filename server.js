@@ -16,10 +16,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method"));
 // Morgan for logging HTTP requests
 app.use(logger("dev"));
+// Set View Engine to ejs templating
+app.set("view engine", "ejs");
+
+app.get("/", (req, res) => {
+  res.render("index");
+});
 
 mongoose.connection.on("connected", () => {
+  console.clear();
   console.log(`Connected to MongoDB ${mongoose.connection.name}.`);
   app.listen(PORT, () => {
-    console.log(`The express app is ready on port ${port}!`);
+    console.log(`The express app is ready on port ${PORT}!`);
   });
 });
